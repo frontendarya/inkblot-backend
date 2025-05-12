@@ -1,0 +1,21 @@
+from enum import Enum
+
+class Popular(str, Enum):
+    BAT = "летучая мышь"
+    BUTTERFLY = "бабочка"
+    BUG = "жук"
+    QUADRUPED = "любое четвероногое в обычном или боковом положении"
+    TWO_PEOPLE = "два человека"
+    BOW_TIE = "галстук-бабочка"
+    HUMANOID = "человек или человекоподобное существо с поднятыми руками"
+    INSECT_FRONT_PART = "передняя часть насекомого"
+    FUR_SKIN = "шкура, меховая одежда, меховой ковер"
+    WOMAN_HEAD = "головы или лица женщин"
+    ANIMAL_HEAD = "голова животного"
+    HARE_HEAD = "голова зайца"
+    MAMMAL = "млекопитающее"
+    SEA_HORSE = "морской конек"
+    MULTI_LEGGED_ANIMAL = "многоногое животное"
+    INSECT = "насекомое"
+    CRAB = "краб"
+    OTHER = "другое"

@@ -1,7 +1,9 @@
+from typing import List
+
 from app.api.diagnosis_counter.popular_enum import Popular
 from app.schemas.diagnosis import DiagnosisCounterIn, Diagnosis
-from neural_models.popularity_model import PopularTextProcessor
-from typing import List
+from neural_models.meaning_model import MeaningModel
+from neural_models.popularity_model import PopularModel
 
 
 class DiagnosisCounter:
@@ -30,7 +32,7 @@ class DiagnosisCounter:
         self.scoreC = sum([1 for item in self.diagnosis_list if item.form_or_color == 3])  # цвет
         self.scoreF = sum([1 for item in self.diagnosis_list if item.form_or_color == 4])  # форма
 
-    def get_diagnosis(self):
+    async def get_diagnosis(self):
         # Популярность
         scoreOrig = 0  # оригинальные ответы
         scorePopular = 0  # популярные ответы
@@ -45,7 +47,8 @@ class DiagnosisCounter:
         scoreMythH = 0  # магические человеки
         diagnosis_list = []
 
-        popular_processor = PopularTextProcessor()
+        popular_processor = PopularModel()
+        model = MeaningModel()
         for item in self.diagnosis_list:
             if item.is_passed:
                 card_id = item.card_id
@@ -61,7 +64,10 @@ class DiagnosisCounter:
                     # TODO: логирование (ошибка в match/case)
                     raise ValueError(f"No popular category found with card_id {card_id}")
 
-                # то же самое со значением
+                prediction = await model.predict(description)
+                if prediction in ['H', 'MH', 'A']:
+                    # TODO: тоже отправить в модель
+                    scoreMH += 1
 
         """
         посчитать количество по категориям
@@ -70,8 +76,8 @@ class DiagnosisCounter:
         вызов функций 
         :return:
         """
-        diagnosis_list.append(self.count_determinants(scoreMH, scoreMA, scorePopular, scoreOrig))
-        diagnosis_list.append(self.count_type_of_experience())
+        diagnosis_list.append(self.count_determinants(scoreMH, scoreMA, scorePopular, scoreOrig, scoreA, scoreH))
+        diagnosis_list.append(self.count_type_of_experience(scoreM))
         diagnosis_list.append(self.count_intelligence(scoreA, scoreOrig, scoreM))
         diagnosis_list.append(self.count_conflict(scoreMythH, scoreM))
         return List[Diagnosis]
@@ -163,32 +169,13 @@ class DiagnosisCounter:
         else:
             return ''
 
-    """
-    Каждая ослабляющая спецификация, включая спутанный организационный элемент, снижает 
-    основную оценку на 0,5 при условии, что основная оценка 1,0 или 1,5. Например, когда животным на 
-    табл. VIII приписывается «чужой» цвет, это снижает оценку на 0,5 очка. От основных минусовых оценок 
-    дальнейшего вычитания не производится. Нередко ослабляющие спецификации смешиваются с 
-    конструктивными, и оценка остается на прежнем уровне.
-    Клопфер и соавторы [174] полагают, что даже один ответ с оценкой уровня формы 4,0 указывает на 
-    очень высокие интеллектуальные способности, с оценкой 3,0 — на высокие, с оценкой 2,0 — на средние 
-    или несколько выше средних.
-    Для общей оценки способностей испытуемого используется еще средняя взвешенная оценка уровня 
-    формы. При этом все оценки, равные 2,5 или выше, умножаются на два; к ним приплюсовываются все 
-    оценки ниже 2,5 и полученная сумма делится на общее количество ответов. В записях, где нет больших 
-    вариаций в четкости форм, средний взвешенный уровень формы от 1,0 до 1,4 представляет средний 
-    интеллект, от 1,5 до 1,9 — интеллект выше среднего, а оценка выше 2,0 говорит об очень высоком 
-    интеллекте. При большом разбросе оценок определение интеллектуального уровня становится более 
-    трудным.
-    """
-
     # Интеллект
     def count_intelligence(self, scoreA, scoreOrig, scoreM):
-        # TODO: добавить чёткость изображения
-        if self.scoreF >= 0 & scoreA & scoreOrig != 0 & scoreM != 0:
+        if (self.scoreF >= 0 & scoreA & scoreOrig != 0 & scoreM != 0) or (self.scoreFPlus > 4):
             return 'высокий'
         elif scoreM == 0:
             return 'низкий'
-        elif scoreM == 0:
+        elif scoreM != 0 and self.scoreW > (scoreM * 2):
             return 'недостаточно'
         else:
             return ''

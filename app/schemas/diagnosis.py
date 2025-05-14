@@ -1,6 +1,6 @@
 from typing import List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class TestResults(BaseModel):
@@ -44,6 +44,7 @@ class Diagnosis(BaseModel):
 class DiagnosisOut(BaseModel):
     diagnosis: List[Diagnosis]
     history_id: int
+    count_tokens: int
 
     class Config:
         orm_mode = True

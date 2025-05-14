@@ -31,7 +31,7 @@ class MessageOut(BaseModel):
 
 # Отображение отправителей со всеми отправленными диагнозами у пользователя
 class MessagesOut(BaseModel):
-    messages = List[MessageOut]
+    messages: List[MessageOut]
 
     class Config:
         orm_mode = True

@@ -5,7 +5,7 @@ from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from . import schemas, crud
-from .database import SessionLocal
+from app.models.base import SessionLocal
 
 SECRET_KEY = "chupakabra2004"
 ALGORITHM = "HS256"

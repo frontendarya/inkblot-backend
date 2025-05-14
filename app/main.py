@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import auth, diagnosis, history, messages, users
-from app.database import Base, engine
+from app.models.base import Base, engine
 
 """
 
@@ -18,7 +18,7 @@ inkblot_project/
 │   ├── schemas/             # DTO (вход и выход) pydantic
 │   │   └── user.py
 │   ├── main.py              # Входная точка
-│   ├── database.py          # Креды для подключения к БД
+│   ├── base.py          # Креды для подключения к БД
 ├── config.py                # Настройки
 └── requirements.txt
 
@@ -28,14 +28,18 @@ inkblot_project/
 Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Inkblot Project")
 
-# Allow CORS for all origins for the sake of simplicity
+# CORS для фронта
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
 
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
 app.include_router(diagnosis.router, prefix="/api/v1/diagnosis", tags=["diagnosis"])

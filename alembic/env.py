@@ -8,7 +8,6 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from app.models import Base
-from app.models import balance, diagnosis, history, message, user
 
 target_metadata = Base.metadata
 

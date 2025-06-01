@@ -64,3 +64,13 @@
 2025-05-14 19:23:51,047 - uvicorn.error - INFO - Waiting for application shutdown.
 2025-05-14 19:23:51,047 - uvicorn.error - INFO - Application shutdown complete.
 2025-05-14 19:23:51,047 - uvicorn.error - INFO - Finished server process [21024]
+2025-05-18 23:29:12,607 - tensorflow - WARNING - From C:\Users\ASUS-DARYA\AppData\Local\Programs\Python\Python311\Lib\site-packages\keras\src\losses.py:2976: The name tf.losses.sparse_softmax_cross_entropy is deprecated. Please use tf.compat.v1.losses.sparse_softmax_cross_entropy instead.
+
+2025-05-18 23:29:14,631 - uvicorn.error - INFO - Started server process [16628]
+2025-05-18 23:29:14,632 - uvicorn.error - INFO - Waiting for application startup.
+2025-05-18 23:29:14,632 - uvicorn.error - INFO - Application startup complete.
+2025-05-18 23:29:14,636 - uvicorn.error - INFO - Uvicorn running on http://localhost:8000 (Press CTRL+C to quit)
+2025-05-18 23:33:15,480 - uvicorn.error - INFO - Shutting down
+2025-05-18 23:33:15,589 - uvicorn.error - INFO - Waiting for application shutdown.
+2025-05-18 23:33:15,589 - uvicorn.error - INFO - Application shutdown complete.
+2025-05-18 23:33:15,589 - uvicorn.error - INFO - Finished server process [16628]
